@@ -1,0 +1,149 @@
+<style>
+
+/* Set the form's display to inline-block (auto-sizes to content), 
+left and right margins to auto (centers it horizontally), 
+and text-align to left (or else its children will be center-aligned too). */
+
+    .formWrapper {
+        text-align: center;
+        display: block;
+    }
+
+    .myForm {
+        display: inline-block;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: left;
+
+        background: lightblue;
+        border-radius: 20px;
+        padding: 2%;
+        width: 75%;
+    }
+
+    .title{
+        text-align: center
+    }
+        
+    .name input{
+        width: 47%;
+        margin-right: 2%;
+    }
+
+    .gender, .birthday{
+        float: left;
+        width: 50%;
+        text-align: center;
+    }
+
+    .gender input{
+        width: 5%;
+    }
+
+    .exams input{
+        width: 96%;
+    }
+
+    .image input{
+        width: 100%;
+    }
+
+    .submit{
+        text-align: right;
+        margin-right: 15%;
+    }
+        
+</style>
+
+<div class="formWrapper">
+    <form action="http://localhost:4000/diagnosis" method="post" class="myForm">
+        <div>
+            <!-- Title -->
+            <div class="title">
+                <h2>Diagnosis Form</h2>
+            </div>
+
+            <!-- Patient Name -->
+            <div class="name">
+                <div>
+                    <h4>Patient's Name</h4>
+                </div>
+                <div>
+                    <!-- <label for="firstName">First</label> -->
+                    <input required type="text" name="firstName" id="firstName" placeholder="First">
+                    <!-- <label for="lastName">Last</label> -->
+                    <input required type="text" name="lastName" id="lastName" placeholder="Last">
+                </div>
+            </div>
+
+            <div>
+
+                <!-- Gender -->
+                <div class="gender">
+                    <div>
+                        <h4>Gender</h4>
+                    </div>
+                    <div>
+                        <input required type="radio" name="gender" value="male" id="genderMale"><label for="genderMale">Male</label>
+                        <input required type="radio" name="gender" value="female" id="genderFemale"><label for="genderFemale">Female</label>
+                    </div>
+                </div>
+
+                <!-- Date of Birth -->
+                <div class="birthday">
+                    <div>
+                        <h4>Date of Birth</h4>
+                    </div>
+                    <div>
+                        <input required type="date" name="birthday" id="birthday">
+                    </div>
+                </div>
+
+            </div>
+
+            <br><br><br>
+
+            <!-- Exams -->
+            <div class="exams">
+                <div>
+                    <h4>Exam 1</h4>
+                </div>
+                <div>
+                    <input type="text" name="exam1" id="exam1" placeholder="Blood Test">
+                </div>
+
+                <div>
+                    <h4>Exam 2</h4>
+                </div>
+                <div>
+                    <input type="text" name="exam2" id="exam2" placeholder="Urine Test">
+                </div>
+
+                <div>
+                    <h4>Exam 3</h4>
+                </div>
+                <div>
+                    <input type="text" name="exam3" id="exam3" placeholder="Density Test">
+                </div>
+            </div>
+
+            <!-- PACS Image -->
+            <div class="image">
+                <div>
+                    <h4>PACS Image</h4>
+                </div>
+                <div>
+                    <input required type="file" name="pacsFile" id="pacsFile">
+                </div>
+            </div>
+
+            <br><br>
+
+            <!-- SUBMIT -->
+            <div class="submit">
+                <input type="submit" value="Submit">
+            </div>
+
+        </div>
+    </form>
+</div>
