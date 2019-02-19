@@ -16,20 +16,6 @@ app.set('view engine', 'ejs');
 // app.use(urlencoded({ extended: false }));
 
 
-let runPy = new Promise(function(success, nosuccess) {
-
-    const { spawn } = require('child_process');
-    const pyprog = spawn('python', ['./pypy.py', 5, 10]);
-
-    pyprog.stdout.on('data', function(data) {
-        success(data);
-    });
-
-    pyprog.stderr.on('data', (data) => {
-        nosuccess(data);
-    });
-});
-
 // app.get('/', (req, res) => {
 
 //     res.write('welcome\n');
@@ -43,13 +29,36 @@ let runPy = new Promise(function(success, nosuccess) {
 app.post('/diagnosis', function (req, res) {
     console.log("POST");
     console.log(req.body);
-    var name = req.body.name;
-    var password = req.body.password;
-    if (name == "Admin" || name == "admin" && password == "Admin" || password == "admin") {
-        res.send("Logged in successfully");
-    } else {
-        res.send("Access Denied!");
-    }
+    var firstName = req.body.firstName;
+    var lastName = req.body.lastName;
+    var gender = req.body.gender;
+    var birthday = req.body.birthday;
+    var exam1 = req.body.exam1;
+    var exam2 = req.body.exam2;
+    var exam3 = req.body.exam3;
+    var pacsFile = req.body.pacsFile;
+
+    let runPy = new Promise(function(success, nosuccess) {
+
+        const { spawn } = require('child_process');
+        const pyprog = spawn('python', ['./ml_scripts/classifier.py', firstName, lastName, gender, birthday, exam1, exam2, exam3, pacsFile]);
+    
+        pyprog.stdout.on('data', function(data) {
+            success(data);
+        });
+    
+        pyprog.stderr.on('data', (data) => {
+            nosuccess(data);
+        });
+        
+    });
+
+    runPy.then(function(fromRunpy) {
+        console.log(fromRunpy.toString());
+        res.render('result', {result: fromRunpy.toString()});
+        // res.end(fromRunpy);
+    });
+
 });
 
 // use res.render to load up an ejs view file of index page
