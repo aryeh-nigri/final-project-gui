@@ -1,0 +1,19 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Dec 12 12:57:46 2018
+
+@author: Arieh
+"""
+
+Comparacao dos algoritmos:
+    
+Naive Bayes: 0.8 com e sem escalonamento
+
+Decision Tree: 0.7 com e sem escalonamento
+    
+Random Forest: 
+    10: 0.6
+    20: 0.6
+    30: 0.6
+    40: 0.6 com e sem escalonamento
+    50: 0.6

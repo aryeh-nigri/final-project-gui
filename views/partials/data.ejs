@@ -1,0 +1,115 @@
+
+        <style>
+            #container,#buttondiv{
+                margin:0 auto;
+                width:80%;
+                overflow:auto;
+            }
+            table.gridtable {
+                margin:0 auto;
+                width:95%;
+                overflow:auto;
+                font-family: helvetica,arial,sans-serif;
+                font-size:14px;
+                color:#333333;
+                border-width: 1px;
+                border-color: #666666;
+                border-collapse: collapse;
+                text-align: center;
+            }
+            table.gridtable th {
+                border-width: 1px;
+                padding: 8px;
+                border-style: solid;
+                border-color: #666666;
+                background-color: #F6B4A5;
+            }
+            table.gridtable td {
+                border-width: 1px;
+                padding: 8px;
+                border-style: solid;
+                border-color: #666666;
+            }
+            .badrowcount {
+              background-color: coral;
+            }
+            .notnumeric {
+              background-color: yellow;
+            }
+        </style>
+
+
+
+
+      <div id="buttondiv">
+        <input type="file" id="inputfile" />
+        <input type="button" id="viewfile" value="Import file" />
+        <br><br>
+      </div>
+      <div class="container" id="container">
+        <table class="gridtable" id="tableMain">
+            
+            <tbody>
+
+            </tbody>
+          </table>
+      </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <script>
+
+        $( document ).ready(function() {
+
+            $('#viewfile').click(function () {
+                var rdr = new FileReader();
+                rdr.onload = function (e) 
+                {
+                  //get the rows into an array
+                  var rows = e.target.result.split("\n");
+                  
+                  //   Table Head built with first line of the CSV file
+                  var firstColumn = rows[0].split(",");
+                  var thead = "";
+                  thead += "<thead><tr class='tableheader'>";   // open tags
+                  for (var col = 0; col < firstColumn.length; col++)
+                  {
+                      thead += "<th>" + firstColumn[col] + "</th>";
+                  }
+                  thead += "</tr></th>";  // close tags
+                    
+                  $('#tableMain').append(thead);    // add table head to our table
+                    
+                  //loop through the rows
+                  for (var row = 1; row < rows.length; row++) 
+                  {
+                      //build a new table row
+                      var newrow = "";
+                      //get the columns into an array
+                      var columns = rows[row].split(",");
+                      //get number of columns
+                      var colcount = columns.length;
+
+                      // check if column is not empty
+                      if(colcount > 0)
+                      {
+                          newrow += "<tr>";   // open tag
+                          for (var col = 0; col < colcount; col++)
+                          {
+                              newrow += "<td>" + columns[col] + "</td>";
+                          }
+                          newrow += "</tr>";  // close tag
+                      }	
+
+                      $('#tableMain').append(newrow);   // add table row to our table   				
+                  }
+                  
+                }
+
+                rdr.readAsText($("#inputfile")[0].files[0]);
+
+            });
+
+        });
+
+    </script>

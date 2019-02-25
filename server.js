@@ -15,6 +15,8 @@ app.set('view engine', 'ejs');
 // app.use(express.static(path.join(__dirname, 'public')));
 // app.use(urlencoded({ extended: false }));
 
+// load the files that are in the public directory from the /static path prefix
+app.use('/static', express.static('public'));
 
 // app.get('/', (req, res) => {
 
@@ -75,6 +77,10 @@ app.get('/', function (req, res) {
 // the same for about page 
 app.get('/about', function (req, res) {
     res.render('about');
+});
+
+app.get('/data', function (req, res) {
+    res.render('datasource');
 });
 
 app.listen(4000, () => console.log('Application listening on port 4000!'));
