@@ -113,3 +113,112 @@
         });
 
     </script>
+
+
+
+<!--
+
+
+
+
+
+
+
+
+
+
+<!--
+
+<style>
+    table {
+        border-collapse: collapse;
+        border: 2px black solid;
+        font: 12px sans-serif;
+    }
+
+    td {
+        border: 1px black solid;
+        padding: 5px;
+    }
+</style>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.js"></script>
+
+<script>
+    function arrayToTable(tableData) {
+        var table = $('<table></table>');
+        $(tableData).each(function (i, rowData) {
+            var row = $('<tr></tr>');
+            $(rowData).each(function (j, cellData) {
+                row.append($('<td>'+cellData+'</td>'));
+            });
+            table.append(row);
+        });
+        return table;
+    }
+
+    $.ajax({
+        type: "GET",
+        url: "/static/bones.csv",
+        success: function (data) {
+            $('body').append(arrayToTable(Papa.parse(data).data));
+        }
+    });
+</script>
+
+-->
+
+
+
+
+
+
+<!--
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+
+<script type="text/javascript"charset="utf-8">
+    d3.text("/static/bones.csv", function(data) {
+        console.log(data);
+        var parsedCSV = d3.csv.parseRows(data);
+
+        var container = d3.select("body")
+                        .append("table")
+
+                        .selectAll("tr")
+                        .data(parsedCSV).enter()
+                        .append("tr")
+
+                        .selectAll("td")
+                        .data(function(d) { return d; }).enter()
+                        .append("td")
+                        .text(function(d) { return d; });
+    });
+</script>
+
+<p> ola </p>
+<table datasrc='#data'>
+
+<thead>
+<tr><th>Number</th><th>English</th><th>French</th><th>German</th></tr>
+</thead>
+
+<tbody> <tr>
+<td><span datafld='number'> </span></td>
+<td><span datafld='english'></span></td>
+<td><span datafld='french'> </span></td>
+<td><span datafld='german'> </span></td>
+</tbody>
+
+</table>
+
+
+<object ID=data>
+<param nAme="DataURL" value="/static/bones.csv">
+<param nAme="UseHeader" value="true">
+</object>
+
+-->
+
+-->
