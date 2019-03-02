@@ -7,7 +7,9 @@ const app = express();
 app.use(bodyParser.json());
 
 //support parsing of application/x-www-form-urlencoded post data
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 
 // set the view engine to ejs
 app.set('view engine', 'ejs');
@@ -40,24 +42,34 @@ app.post('/diagnosis', function (req, res) {
     var exam3 = req.body.exam3;
     var pacsFile = req.body.pacsFile;
 
-    let runPy = new Promise(function(success, nosuccess) {
 
-        const { spawn } = require('child_process');
-        const pyprog = spawn('python', ['./ml_scripts/classifier.py', firstName, lastName, gender, birthday, exam1, exam2, exam3, pacsFile]);
-    
-        pyprog.stdout.on('data', function(data) {
+    let runPy = new Promise(function (success, nosuccess) {
+
+        const {
+            spawn
+        } = require('child_process');
+        //const pyprog = spawn('py', ['./ml_scripts/classifier.py', firstName, lastName, gender, birthday, exam1, exam2, exam3, pacsFile]);
+        const pyprog = spawn('py', ["./ml_scripts/test.py", firstName]);
+
+        pyprog.stdout.on('data', function (data) {
             success(data);
         });
-    
+
         pyprog.stderr.on('data', (data) => {
             nosuccess(data);
         });
-        
+
     });
 
-    runPy.then(function(fromRunpy) {
+    runPy.catch(function (error) {
+        console.log("o erro eh esse: **\n" + error);
+    });
+
+    runPy.then(function (fromRunpy) {
         console.log(fromRunpy.toString());
-        res.render('result', {result: fromRunpy.toString()});
+        res.render('result', {
+            result: fromRunpy.toString()
+        });
         // res.end(fromRunpy);
     });
 
@@ -66,7 +78,7 @@ app.post('/diagnosis', function (req, res) {
 // use res.render to load up an ejs view file of index page
 app.get('/', function (req, res) {
     res.render('index');
-    
+
     // antigo index tinha:
     // <% students.forEach(function(student){ %>
     //     <%- include('partials/student', {student: student}) %>

@@ -1,4 +1,5 @@
 # Compare Algorithms
+import sys
 import pandas
 import matplotlib.pyplot as plt
 from sklearn import model_selection
@@ -9,10 +10,14 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 
+
+firstName = sys.argv[1]     # string
+
+print(firstName)
 # load dataset
 # url = "https://raw.githubusercontent.com/jbrownlee/Datasets/master/pima-indians-diabetes.data.csv"
 # 6,148,72,35,0,33.6,0.627,50,1
-fileLocation = r"c:/Users/Arieh/Documents/5779.1/WebDevelopment/targil2/login-form/ml_scripts/bones.csv"
+fileLocation = r"C:\Users\danie\OneDrive\Documentos\GitHub\final-project-gui\ml_scripts/bones.csv"
 # tirado da primeira linha do bones.csv :
 # Bone,meanGL,SD-GL,Smoothness,ThirdMoment,Uniformity,Entropy,CategoriaDoOsso
 # names = ['preg', 'plas', 'pres', 'skin', 'test', 'mass', 'pedi', 'age', 'class']
@@ -49,3 +54,4 @@ ax = fig.add_subplot(111)
 plt.boxplot(results)
 ax.set_xticklabels(names)
 plt.show()
+sys.stdout.flush()
