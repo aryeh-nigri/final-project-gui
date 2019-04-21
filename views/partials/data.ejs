@@ -1,224 +1,161 @@
-
-        <style>
-            #container,#buttondiv{
-                margin:0 auto;
-                width:80%;
-                overflow:auto;
-            }
-            table.gridtable {
-                margin:0 auto;
-                width:95%;
-                overflow:auto;
-                font-family: helvetica,arial,sans-serif;
-                font-size:14px;
-                color:#333333;
-                border-width: 1px;
-                border-color: #666666;
-                border-collapse: collapse;
-                text-align: center;
-            }
-            table.gridtable th {
-                border-width: 1px;
-                padding: 8px;
-                border-style: solid;
-                border-color: #666666;
-                background-color: #F6B4A5;
-            }
-            table.gridtable td {
-                border-width: 1px;
-                padding: 8px;
-                border-style: solid;
-                border-color: #666666;
-            }
-            .badrowcount {
-              background-color: coral;
-            }
-            .notnumeric {
-              background-color: yellow;
-            }
-        </style>
-
-
-
-
-      <div id="buttondiv">
-        <input type="file" id="inputfile" />
-        <input type="button" id="viewfile" value="Import file" />
-        <br><br>
-      </div>
-      <div class="container" id="container">
-        <table class="gridtable" id="tableMain">
-            
-            <tbody>
-
-            </tbody>
-          </table>
-      </div>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
-    <script>
-
-        $( document ).ready(function() {
-
-            $('#viewfile').click(function () {
-                var rdr = new FileReader();
-                rdr.onload = function (e) 
-                {
-                  //get the rows into an array
-                  var rows = e.target.result.split("\n");
-                  
-                  //   Table Head built with first line of the CSV file
-                  var firstColumn = rows[0].split(",");
-                  var thead = "";
-                  thead += "<thead><tr class='tableheader'>";   // open tags
-                  for (var col = 0; col < firstColumn.length; col++)
-                  {
-                      thead += "<th>" + firstColumn[col] + "</th>";
-                  }
-                  thead += "</tr></th>";  // close tags
-                    
-                  $('#tableMain').append(thead);    // add table head to our table
-                    
-                  //loop through the rows
-                  for (var row = 1; row < rows.length; row++) 
-                  {
-                      //build a new table row
-                      var newrow = "";
-                      //get the columns into an array
-                      var columns = rows[row].split(",");
-                      //get number of columns
-                      var colcount = columns.length;
-
-                      // check if column is not empty
-                      if(colcount > 0)
-                      {
-                          newrow += "<tr>";   // open tag
-                          for (var col = 0; col < colcount; col++)
-                          {
-                              newrow += "<td>" + columns[col] + "</td>";
-                          }
-                          newrow += "</tr>";  // close tag
-                      }	
-
-                      $('#tableMain').append(newrow);   // add table row to our table   				
-                  }
-                  
-                }
-
-                rdr.readAsText($("#inputfile")[0].files[0]);
-
-            });
-
-        });
-
-    </script>
-
-
-
-<!--
-
-
-
-
-
-
-
-
-
-
-<!--
-
 <style>
-    table {
-        border-collapse: collapse;
-        border: 2px black solid;
-        font: 12px sans-serif;
+    #container,
+    #buttondiv {
+        margin: 0 auto;
+        width: 80%;
+        overflow: auto;
     }
 
-    td {
-        border: 1px black solid;
-        padding: 5px;
+    div.gridtable {
+        margin: 0 auto;
+        width: 95%;
+        overflow: auto;
+        font-family: helvetica, arial, sans-serif;
+        font-size: 14px;
+        color: #333333;
+        border-width: 1px;
+        border-color: #666666;
+        border-collapse: collapse;
+        text-align: center;
+    }
+
+    div.gridtable th {
+        border-width: 1px;
+        padding: 8px;
+        border-style: solid;
+        border-color: #666666;
+        background-color: #F6B4A5;
+    }
+
+    div.gridtable td {
+        border-width: 1px;
+        padding: 8px;
+        border-style: solid;
+        border-color: #666666;
+    }
+
+    .badrowcount {
+        background-color: coral;
+    }
+
+    .notnumeric {
+        background-color: yellow;
     }
 </style>
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.js"></script>
 
+
+
+<div id="buttondiv">
+    <input type="file" id="inputfile" />
+    <input type="button" id="viewfile" value="Import file" />
+    <br><br>
+</div>
+<div class="container" id="container">
+    <div class="gridtable" id="tableMain">
+
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script>
-    function arrayToTable(tableData) {
-        var table = $('<table></table>');
-        $(tableData).each(function (i, rowData) {
-            var row = $('<tr></tr>');
-            $(rowData).each(function (j, cellData) {
-                row.append($('<td>'+cellData+'</td>'));
-            });
-            table.append(row);
+    $(document).ready(function () {
+        $('#viewfile').click(function () {
+            var rdr = new FileReader();
+            rdr.onload = function (e) {
+                var content = e.target.result;
+                e.preventDefault();
+                fetch('http://localhost:4000/diagnosis', {
+                        method: 'POST',
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            content: content,
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(function (data) {
+
+                        const keyRows = Object.keys(data);
+                        const numberOfKeys = keyRows.length;
+                        const numberOfAlgorithms = (numberOfKeys / 2);
+
+                        const firstHalfKeyRows = keyRows.slice(0, numberOfAlgorithms);
+                        const secondHalfKeyRows = keyRows.slice(numberOfAlgorithms, keyRows
+                            .length);
+
+                        putHeaderIntoTable("Algorithm", "Mean", "Std.");
+                        putDataIntoTable(data, firstHalfKeyRows);
+
+                        putHeaderIntoTable("Algorithm", "matrix confusion");
+                        putDataIntoTable(data, secondHalfKeyRows);
+
+                    })
+            }
+            rdr.readAsText($("#inputfile")[0].files[0]);
         });
-        return table;
+    });
+
+    let table = $("<table></table>");
+
+    function putHeaderIntoTable() {
+
+        let thead = "";
+        thead += "<thead><tr class='tableheader'>"; // open tags
+        for (var i = 0; i < arguments.length; i++) {
+            thead += "<th>" + arguments[i] + "</th>";
+        }
+        thead += "</tr></thead>"; // close tags
+        table.append(thead);
     }
 
-    $.ajax({
-        type: "GET",
-        url: "/static/bones.csv",
-        success: function (data) {
-            $('body').append(arrayToTable(Papa.parse(data).data));
+    function putDataIntoTable(data, keysToPut) {
+        const keyRows = Object.keys(data);
+        const numberOfKeys = keyRows.length;
+        const numberOfAlgorithms = (numberOfKeys / 2) + 1;
+
+        for (const key in data) {
+            var newrow = "";
+            //get the line into an array
+            var line = data[key].split(" ");
+            console.log(line);
+
+            //get number of line
+            var numberOfItemsInLine = line.length;
+
+            // check if line is not empty
+            if (numberOfItemsInLine > 0 && keysToPut.indexOf(key) != -1) {
+                newrow += "<tr>"; // open tag
+                newrow += "<td>" + key + "</td>";
+
+                if (key.indexOf("matrix") != -1) {               
+                    newrow += "<td>";
+                    for (var col = 0; col < numberOfItemsInLine; col++) {
+                        if (line[col].length > 0) {
+                            if(line[col].indexOf("]") != -1){
+                                newrow += " " + line[col];
+                                newrow += "<br>";    
+                                continue;
+                            }                           
+                            newrow += " " + line[col];
+                        }
+                    }
+                    newrow +=  "</td>"
+                } else {
+                    for (var col = 0; col < numberOfItemsInLine; col++) {
+                        if (line[col].length > 0) {
+                            newrow += "<td>" + line[col] + "</td>";
+                        }
+                    }
+                }
+                newrow += "</tr>"; // close tag
+            }
+            table.append(newrow);
         }
-    });
+        console.log(table);
+        table.append("<br>")
+        $('#tableMain').append(table);
+        table = $("<table></table>")
+    }
 </script>
-
--->
-
-
-
-
-
-
-<!--
-
-<script src="http://d3js.org/d3.v3.min.js"></script>
-
-<script type="text/javascript"charset="utf-8">
-    d3.text("/static/bones.csv", function(data) {
-        console.log(data);
-        var parsedCSV = d3.csv.parseRows(data);
-
-        var container = d3.select("body")
-                        .append("table")
-
-                        .selectAll("tr")
-                        .data(parsedCSV).enter()
-                        .append("tr")
-
-                        .selectAll("td")
-                        .data(function(d) { return d; }).enter()
-                        .append("td")
-                        .text(function(d) { return d; });
-    });
-</script>
-
-<p> ola </p>
-<table datasrc='#data'>
-
-<thead>
-<tr><th>Number</th><th>English</th><th>French</th><th>German</th></tr>
-</thead>
-
-<tbody> <tr>
-<td><span datafld='number'> </span></td>
-<td><span datafld='english'></span></td>
-<td><span datafld='french'> </span></td>
-<td><span datafld='german'> </span></td>
-</tbody>
-
-</table>
-
-
-<object ID=data>
-<param nAme="DataURL" value="/static/bones.csv">
-<param nAme="UseHeader" value="true">
-</object>
-
--->
-
--->
